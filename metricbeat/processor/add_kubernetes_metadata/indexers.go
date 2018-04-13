@@ -12,6 +12,9 @@ func init() {
 	//Add IP Port Indexer as a default indexer
 	kubernetes.Indexing.AddDefaultIndexerConfig(kubernetes.IPPortIndexerName, *cfg)
 
+	//Add Pod Name Indexer as a default indexer to support the kubernetes module
+	kubernetes.Indexing.AddDefaultIndexerConfig(kubernetes.PodNameIndexerName, *cfg)
+
 	config := map[string]interface{}{
 		"lookup_fields": []string{"metricset.host"},
 	}
@@ -19,5 +22,13 @@ func init() {
 	if err == nil {
 		//Add field matcher with field to lookup as metricset.host
 		kubernetes.Indexing.AddDefaultMatcherConfig(kubernetes.FieldMatcherName, *fieldCfg)
+	}
+
+	k8sConfig := map[string]interface{}{
+		"format": []string{"%{[kubernetes.namespace]}/%{[kubernetes.pod.name]}"},
+	}
+	k8sFieldCfg, err := common.NewConfigFrom(k8sConfig)
+	if err == nil {
+		kubernetes.Indexing.AddDefaultMatcherConfig(kubernetes.FieldFormatMatcherName, *fieldCfg)
 	}
 }
