@@ -624,7 +624,7 @@ the Kubernetes node.
 processors:
 - add_kubernetes_metadata:
     in_cluster: false
-    host: <hostname>
+    host: <kubectl context name>
     kube_config: ${HOME}/.kube/config
 -------------------------------------------------------------------------------
 
@@ -636,7 +636,7 @@ enables ones that the user is interested in.
 processors:
 - add_kubernetes_metadata:
     in_cluster: false
-    host: <hostname>
+    host: <kubectl context name>
     kube_config: ~/.kube/config
     default_indexers.enabled: false
     default_matchers.enabled: false
@@ -651,8 +651,9 @@ The `add_kubernetes_metadata` processor has the following configuration settings
 
 `in_cluster`:: (Optional) Use in cluster settings for Kubernetes client, `true`
 by default.
-`host`:: (Optional) In case `in_cluster` is false, use this host to connect to
-Kubernetes API.
+`host`:: (Optional) Required if `in_cluster` is false, host must match your kubectl
+context name. You can find your current context name by running
+`kubectl config current-context`
 `kube_config`:: (Optional) Use given config file as configuration for Kubernetes
 client.
 `default_indexers.enabled`:: (Optional) Enable/Disable default pod indexers, in
